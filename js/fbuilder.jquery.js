@@ -288,7 +288,7 @@
             },
             showCsslayout: function(v) {
                 return '<label>Add Css Layout Keywords</label><input class="large" name="sCsslayout" id="sCsslayout" value="'+v+'" />';
-            },            
+            }           
         };
         var fform=function(){};        
         $.extend(fform.prototype,{
