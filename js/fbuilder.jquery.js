@@ -712,4 +712,4 @@
        this.fBuild = ffunct;
        return this;    
     }	 
-})(jQuery);    
+})(jQuery);   
