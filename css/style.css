@@ -8,7 +8,7 @@ body{font:11px "Lucida Grande","Lucida Sans Unicode",Tahoma,sans-serif;}
 .width30{width:30%}
 .padding10{padding:10px;}
 .button{float:left;margin:5px 15px}
-#tabs{height:500px;}
+#tabs{height:500px;overflow:auto}
 #fbuilder{height:484px;overflow:auto;position:relative;}
 #fbuilder .fields{border:1px solid transparent;padding:3px 10px 14px 10px;margin:5px 0px;display:block;position:relative}
 #fbuilder .fields .arrow{position:absolute;left:-15px;top:20px;display:none}
