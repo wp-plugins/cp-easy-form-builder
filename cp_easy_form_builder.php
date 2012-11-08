@@ -125,6 +125,15 @@ function cp_easyform_filter_content($content) {
 }
 
 
+function cp_easyform_show_booking_form($id = "")
+{
+    if ($id != '')
+        define ('CP_EASYFORM_ID',$id);
+    define('CP_AUTH_INCLUDE', true);
+    @include dirname( __FILE__ ) . '/cp_easyform_public_int.inc.php';    
+}
+
+
 /* Code for the admin area */
 
 if ( is_admin() ) {
