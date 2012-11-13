@@ -67,7 +67,7 @@ if ( !defined('CP_AUTH_INCLUDE') )
 
 <form name="cp_easyform_pform" id="cp_easyform_pform" action="<?php get_site_url(); ?>" method="post">
   <input type="hidden" name="cp_easyform_pform_process" value="1" />
-<input type="hidden" name="form_structure" id="form_structure" size="180" value="<?php echo esc_attr(cp_easyform_cleanJSON(get_option('form_structure', CP_EASYFORM_DEFAULT_form_structure))); ?>" />
+<input type="hidden" name="form_structure" id="form_structure" size="180" value="<?php echo str_replace("\r","",str_replace("\n","",esc_attr(cp_easyform_cleanJSON(get_option('form_structure', CP_EASYFORM_DEFAULT_form_structure))))); ?>" />
     <div id="fbuilder">
         <div id="formheader"></div>
         <div id="fieldlist"></div>
