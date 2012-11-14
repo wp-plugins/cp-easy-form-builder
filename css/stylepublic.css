@@ -49,3 +49,4 @@ top:-8px;
 left:0px;
 z-index:1000;
 }
+.ui-datepicker{ z-index: 9999 !important;}
