@@ -351,10 +351,12 @@
                         return "";  
                 },                                
                 showFormat:function(){
-                    if(typeof this.dformat != 'undefined')
-                        return this.showFormatIntance();
+                    if(typeof this.dformat != 'undefined')                    
+                        try {
+                            return this.showFormatIntance();
+                        } catch(e) {return "";}
                     else
-                        return "";  
+                        return "";
                 },
                 showChoice:function(){
                     if(typeof this.choices != 'undefined')
@@ -712,4 +714,4 @@
        this.fBuild = ffunct;
        return this;    
     }	 
-})(jQuery);   
+})(jQuery);
