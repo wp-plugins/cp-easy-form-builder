@@ -224,14 +224,9 @@ function set_cp_easyform_insert_button() {
 } 
 
 function set_cp_easyform_insert_adminScripts($hook) { 
-         
-    wp_enqueue_script( 'jquery' );
-    wp_enqueue_script( 'jquery-ui-sortable' );
-    wp_enqueue_script( 'jquery-ui-tabs' );
-    wp_enqueue_script( 'jquery-ui-droppable' );
-    wp_enqueue_script( 'jquery-ui-button' );
-    wp_enqueue_script( 'query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__) );
-    wp_enqueue_script( 'cp_easyform_buikder_script', plugins_url('/js/fbuilder.jquery.js', __FILE__) );
+    wp_deregister_script('query-stringify');
+    wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
+    wp_enqueue_script( 'cp_easyform_buikder_script', plugins_url('/js/fbuilder.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-sortable","jquery-ui-tabs","jquery-ui-droppable","jquery-ui-button","query-stringify") );    
     
     if( 'post.php' != $hook  && 'post-new.php' != $hook )
         return;
@@ -239,14 +234,14 @@ function set_cp_easyform_insert_adminScripts($hook) {
 }
 
 function set_cp_easyform_insert_publicScripts($hook) {           
-    wp_enqueue_script( 'jquery' );
-    wp_enqueue_script( 'jquery-ui-tabs' );
-    wp_enqueue_script( 'jquery-ui-button' );    
-    wp_enqueue_script( 'jquery-ui-core' );
-    wp_enqueue_script( 'jquery-ui-datepicker' );
-    wp_enqueue_script( 'query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__) );
-    wp_enqueue_script( 'cp_easyform_builder_script', plugins_url('/js/fbuilder.jquery.js', __FILE__) );
-    wp_enqueue_script( 'cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__) );
+    wp_deregister_script('query-stringify');
+    wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
+    
+    wp_deregister_script('cp_contactformpp_validate_script');
+    wp_register_script('cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
+    
+    wp_enqueue_script( 'cp_easyform_builder_script', 
+    plugins_url('/js/fbuilder.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-tabs","jquery-ui-button","jquery-ui-datepicker","query-stringify","cp_easyform_validate_script") );    
 }
 
 function cp_easyform_get_site_url()
