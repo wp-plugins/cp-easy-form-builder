@@ -33,8 +33,6 @@ define('CP_EASYFORM_DEFAULT_fp_destination_emails', CP_EASYFORM_DEFAULT_fp_from_
      <link href="<?php echo plugins_url('css/cupertino/jquery-ui-1.8.20.custom.css', __FILE__); ?>" type="text/css" rel="stylesheet" />   
         
      <script>
-     
-         $easyFormQuery = jQuery.noConflict();
          
          $easyFormQuery(document).ready(function() {
             var f = $easyFormQuery("#fbuilder").fbuilder();
