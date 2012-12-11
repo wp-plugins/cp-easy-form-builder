@@ -21,7 +21,7 @@
         		},opt);
         	opt.messages.max = $.validator.format(opt.messages.max);	
         	opt.messages.min = $.validator.format(opt.messages.min);
-        	jQuery.extend(jQuery.validator.messages, opt.messages);			
+        	$.extend($.validator.messages, opt.messages);			
         }		
         getNameByIdFromType = function(id){
             for (var i=0;i<opt.typeList.length;i++)
@@ -239,11 +239,11 @@
                 //$("#form1").append('<div class="fields"><label>&nbsp;</label><div class="dfield"><input type="submit" class="button submit" id="btnSave" value="Save"/></div><div class="clearer"></div></div>');                       
                 //$( ".button").button();
                 
-                jQuery.validator.addMethod("dateddmmyyyy", function(value, element) { 
+                $.validator.addMethod("dateddmmyyyy", function(value, element) { 
                   return this.optional(element) || /^(?:[1-9]|0[1-9]|1[0-9]|2[0-9]|3[0-1])[\/\-](?:[1-9]|0[1-9]|1[0-2])[\/\-]\d{4}$/.test(value); 
                 });
                 
-                jQuery.validator.addMethod("datemmddyyyy", function(value, element) { 
+                $.validator.addMethod("datemmddyyyy", function(value, element) { 
                   return this.optional(element) || /^(?:[1-9]|0[1-9]|1[0-2])[\/\-](?:[1-9]|0[1-9]|1[0-9]|2[0-9]|3[0-1])[\/\-]\d{4}$/.test(value); 
                 });//{required: true, range: [11, 22]}                                
                 
@@ -641,7 +641,7 @@
        loadtmp = function(p)
        {
            
-           if ( d = jQuery.parseJSON(p))
+           if ( d = $.parseJSON(p))
            {
                if (d.length==2)
                {   
@@ -681,13 +681,13 @@
            },           
            saveData:function(f){
                if (f!="")
-                   $("#"+f).val("["+ jQuery.stringifyXX(items,false)+",["+ jQuery.stringifyXX(theForm,false)+"]]");
+                   $("#"+f).val("["+ $.stringifyXX(items,false)+",["+ $.stringifyXX(theForm,false)+"]]");
                else
                {
                    $.ajax({
                        type: "POST",
                        url: "process.php?act=save",
-                       data: "items="+ jQuery.stringifyXX(items,true)+"&theForm="+ jQuery.stringifyXX(theForm,true),
+                       data: "items="+ $.stringifyXX(items,true)+"&theForm="+ $.stringifyXX(theForm,true),
                        dataType: "json",
                        success: function (result) {
                            alert("The form has been saved!!!");
@@ -715,3 +715,4 @@
        return this;    
     }	 
 })(jQuery);
+$easyFormQuery = jQuery.noConflict();
