@@ -11,7 +11,6 @@ if ( !defined('CP_AUTH_INCLUDE') )
 <link href="<?php echo plugins_url('css/stylepublic.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url('css/cupertino/jquery-ui-1.8.20.custom.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
 <script type="text/javascript">
-           $easyFormQuery = jQuery.noConflict();
            $easyFormQuery(document).ready(function() {
          	   var f = $easyFormQuery("#fbuilder").fbuilder({pub:true,messages: {
 	                	required: '<?php echo str_replace("'","\\'",get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required)); ?>',
@@ -30,17 +29,12 @@ if ( !defined('CP_AUTH_INCLUDE') )
 			        errorPlacement: function(e, element) {
                         if (element.hasClass('group')){
                             element = element.parent().siblings(":last");
-                            //element = element.siblings(":last");
                         }
-                        //else
-                        //    e.insertAfter(element);
                         offset = element.offset();
                         e.insertBefore(element)
-                        e.addClass('message');  // add a class to the wrapper
+                        e.addClass('message');
                         e.css('position', 'absolute');
                         e.css('left',0 );
-                        ////e.css('left', offset.left );//+ element.outerWidth()
-                        //e.css('top', offset.top+element.outerHeight()+0);
                         e.css('top',element.outerHeight());
                     },
                     submitHandler: function(form) {
