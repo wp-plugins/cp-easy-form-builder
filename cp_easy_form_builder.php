@@ -257,6 +257,8 @@ function cp_easyform_cleanJSON($str)
 {
     $str = str_replace('&qquot;','"',$str);
     $str = str_replace('	',' ',$str);
+    $str = str_replace("\n",'\n',$str);
+    $str = str_replace("\r",'',$str);      
     return $str;
 }
 
