@@ -79,7 +79,7 @@ define('CP_EASYFORM_DEFAULT_fp_destination_emails', CP_EASYFORM_DEFAULT_fp_from_
 
      </script>
      
-     <div style="background:#fafafa;width:780px;">
+     <div style="background:#fafafa;width:780px;" class="form-builder">
      
          <div class="column width50">
              <div id="tabs">
