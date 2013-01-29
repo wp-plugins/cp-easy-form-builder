@@ -7,7 +7,7 @@ body{font:11px "Lucida Grande","Lucida Sans Unicode",Tahoma,sans-serif;}
 .width40{width:40%}
 .width30{width:30%}
 .padding10{padding:10px;}
-.button{float:left;margin:5px 15px}
+.button, .form-builder .button{float:left;margin:5px 15px;}
 #tabs{height:500px;overflow:auto}
 #fbuilder{height:484px;overflow:auto;position:relative;}
 #fbuilder .fields{border:1px solid transparent;padding:3px 10px 14px 10px;margin:5px 0px;display:block;position:relative}
