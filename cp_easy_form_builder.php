@@ -20,7 +20,7 @@ define('CP_EASYFORM_TABLE_NAME', $wpdb->prefix . CP_EASYFORM_TABLE_NAME_NO_PREFI
 // CP Easy Form constants
 
 
-define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"Contact Form","description":"You can use the following form to contact us. <br /><br /><em>More about this form: <a href=\"http://wordpress.dwbooster.com/forms/cp-easy-form-builder\">CP Easy Form Builder</a></em>","formlayout":"top_aligned"}]]');
+define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"Contact Form","description":"You can use the following form to contact us. <br />","formlayout":"top_aligned"}]]');
 
 define('CP_EASYFORM_DEFAULT_fp_subject', 'Contact from the blog...');
 define('CP_EASYFORM_DEFAULT_fp_inc_additional_info', 'true');
