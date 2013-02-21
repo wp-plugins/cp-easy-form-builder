@@ -16,16 +16,19 @@ CP Easy Form Builder is a contact form plugin that allows creating **contact for
 
 It makes it easy to create contact forms, booking forms, or other types of forms that capture information via your website.
 
-It has a visual interface for creating the contact form with field validation included in all versions. It is as simple as just drag and drop the form fields into the contact form.
+It has a visual interface for creating the **contact form** with **field validation** and anti-spam **captcha** image verification included in all versions. It is as simple as just drag and drop the form fields into the contact form.
 
 = Features: =
 
 * Allows to create contact forms **visually**, with a modern and simple interface
 * **Sends** the contact form data to the email addresses that you provide
 * Allows to include additional user information (IP, user-agent)
-* Allows to customize the text of **email messages**
+* Allows to customize the text of **email messages**, including specific tags for each form field
 * Includes **validation** of the contact form data: required fields, emails, dates, number, etc.
+* Includes a **built-in captcha** image verification.
 * Contact forms are processed using Ajax: more speed and comfort for the user
+
+The contact form is rendered and validated using a modern jQuery script, compatible with mobile pages.
 
 == Installation ==
 
@@ -52,6 +55,7 @@ http://wordpress.dwbooster.com/forms/cp-easy-form-builder
 3. Contact form processing settings
 4. Contact form validation settings
 5. Inserting a contact form into a page
+6. Built-in captcha image anti-spam protection
 
 == Changelog ==
 
