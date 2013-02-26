@@ -199,8 +199,6 @@ function cp_easyform_remove() {
 
 /* Filter for placing the maps into the contents */
 
-add_filter('the_content','cp_easyform_filter_content');
-
 function cp_easyform_filter_content($atts) {
     global $wpdb;    
     extract( shortcode_atts( array(
