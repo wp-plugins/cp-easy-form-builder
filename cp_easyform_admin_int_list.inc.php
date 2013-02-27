@@ -121,7 +121,7 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
                              <input type="button" name="calmanage_<?php echo $item->id; ?>" value="Manage Settings" onclick="cp_manageSettings(<?php echo $item->id; ?>);" />
                              
     </td>
-    <td nowrap>[CP_EASY_FORM_WILL_APPEAR_HERE form="<?php echo $item->id; ?>"]</td>          
+    <td nowrap>[CP_EASY_FORM_WILL_APPEAR_HERE id="<?php echo $item->id; ?>"]</td>          
    </tr>
 <?php  
    } 
