@@ -2,7 +2,7 @@
 </p>
 <link href="<?php echo plugins_url('css/stylepublic.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
 <link href="<?php echo plugins_url('css/cupertino/jquery-ui-1.8.20.custom.css', __FILE__); ?>" type="text/css" rel="stylesheet" />
-<form name="cp_easyform_pform" id="cp_easyform_pform" action="<?php cp_easyform_get_site_url(); ?>" method="post" enctype="multipart/form-data" onsubmit="return cp_easyform_pform_doValidate(this);">
+<form class="cpp_form" name="cp_easyform_pform" id="cp_easyform_pform" action="<?php cp_easyform_get_site_url(); ?>" method="post" enctype="multipart/form-data" onsubmit="return cp_easyform_pform_doValidate(this);">
   <input type="hidden" name="cp_easyform_pform_process" value="1" />
   <input type="hidden" name="cp_easyform_id" value="<?php echo CP_EASYFORM_ID; ?>" />
   <input type="hidden" name="cp_ref_page" value="<?php esc_attr(cp_easyform_get_site_url()); ?>" />

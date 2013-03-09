@@ -222,6 +222,15 @@ function cp_easyform_get_public_form() {
     else
         $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE );
     
+    wp_deregister_script('query-stringify');
+    wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
+    
+    wp_deregister_script('cp_contactformpp_validate_script');
+    wp_register_script('cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
+    
+    wp_enqueue_script( 'cp_easyform_builder_script', 
+    plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-datepicker","query-stringify","cp_easyform_validate_script"), false, true );
+        
     define ('CP_EASYFORM_ID',$myrows[0]->id);
     wp_localize_script('cp_easyform_builder_script', 'cp_easyform_fbuilder_config', array('obj'  	=>
     '{"pub":true,"messages": {
@@ -282,8 +291,7 @@ if ( is_admin() ) {
         add_options_page('CP Easy Form Builder Options', 'CP Easy Form Builder', 'manage_options', 'cp_easy_form_builder', 'cp_easyform_html_post_page' );
     }
 } else { // if not admin
-    add_shortcode( 'CP_EASY_FORM_WILL_APPEAR_HERE', 'cp_easyform_filter_content' );    
-    add_action('wp_enqueue_scripts', 'set_cp_easyform_insert_publicScripts');
+    add_shortcode( 'CP_EASY_FORM_WILL_APPEAR_HERE', 'cp_easyform_filter_content' );        
 }
 
 function cp_easyform_settingsLink($links) {
@@ -323,17 +331,6 @@ function set_cp_easyform_insert_adminScripts($hook) {
     if( 'post.php' != $hook  && 'post-new.php' != $hook )
         return;
     wp_enqueue_script( 'cp_easyform_script', plugins_url('/cp_easyform_scripts.js', __FILE__) );
-}
-
-function set_cp_easyform_insert_publicScripts($hook) {
-    wp_deregister_script('query-stringify');
-    wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
-    
-    wp_deregister_script('cp_contactformpp_validate_script');
-    wp_register_script('cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
-    
-    wp_enqueue_script( 'cp_easyform_builder_script', 
-    plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-tabs","jquery-ui-button","jquery-ui-datepicker","query-stringify","cp_easyform_validate_script"), false, true );
 }
 
 function cp_easyform_get_site_url()
