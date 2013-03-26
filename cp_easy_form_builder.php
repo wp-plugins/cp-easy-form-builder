@@ -313,7 +313,7 @@ function cp_easyform_customAdjustmentsLink($links) {
 }
 
 function cp_easyform_html_post_page() {
-    if ($_GET["cal"] != '')
+    if (isset($_GET["cal"]) && $_GET["cal"] != '')
         @include_once dirname( __FILE__ ) . '/cp_easyform_admin_int.php';
     else
         @include_once dirname( __FILE__ ) . '/cp_easyform_admin_int_list.inc.php';        
@@ -324,7 +324,7 @@ function set_cp_easyform_insert_button() {
 }
 
 function set_cp_easyform_insert_adminScripts($hook) {
-    if ($_GET["page"] == 'cp_easy_form_builder')
+    if (isset($_GET["page"]) && $_GET["page"] == 'cp_easy_form_builder')
     {
         wp_deregister_script('query-stringify');
         wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
