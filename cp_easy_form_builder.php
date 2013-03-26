@@ -324,10 +324,12 @@ function set_cp_easyform_insert_button() {
 }
 
 function set_cp_easyform_insert_adminScripts($hook) {
-    wp_deregister_script('query-stringify');
-    wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
-    wp_enqueue_script( 'cp_easyform_buikder_script', plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-sortable","jquery-ui-tabs","jquery-ui-droppable","jquery-ui-button","query-stringify") );
-
+    if ($_GET["page"] == 'cp_easy_form_builder')
+    {
+        wp_deregister_script('query-stringify');
+        wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
+        wp_enqueue_script( 'cp_easyform_buikder_script', plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-sortable","jquery-ui-tabs","jquery-ui-droppable","jquery-ui-button","query-stringify") );
+    }
     if( 'post.php' != $hook  && 'post-new.php' != $hook )
         return;
     wp_enqueue_script( 'cp_easyform_script', plugins_url('/cp_easyform_scripts.js', __FILE__) );
