@@ -14,11 +14,12 @@ License: GPL
 
 
 define('CP_EASYFORM_TABLE_NAME_NO_PREFIX', "cp_easy_forms");
-define('CP_EASYFORM_TABLE_NAME', $wpdb->prefix . CP_EASYFORM_TABLE_NAME_NO_PREFIX);
+define('CP_EASYFORM_TABLE_NAME', @$wpdb->prefix . CP_EASYFORM_TABLE_NAME_NO_PREFIX);
 
 
 // CP Easy Form constants
 
+define('CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING', false);
 
 define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"Contact Form","description":"You can use the following form to contact us. <br />","formlayout":"top_aligned"}]]');
 
@@ -94,27 +95,25 @@ function _cp_easyform_install() {
     define('CP_EASYFORM_DEFAULT_fp_destination_emails', CP_EASYFORM_DEFAULT_fp_from_email);
 
     $table_name = $wpdb->prefix.CP_EASYFORM_FORMS_TABLE;
-    $sql = "DROP TABLE IF EXISTS".$table_name.";";
-    $wpdb->query($sql);
 
     $sql = "CREATE TABLE $table_name (
          id mediumint(9) NOT NULL AUTO_INCREMENT,
 
          form_name VARCHAR(250) DEFAULT '' NOT NULL,
 
-         form_structure text DEFAULT '' NOT NULL,
+         form_structure text,
 
          fp_from_email VARCHAR(250) DEFAULT '' NOT NULL,
-         fp_destination_emails text DEFAULT '' NOT NULL,
+         fp_destination_emails text,
          fp_subject VARCHAR(250) DEFAULT '' NOT NULL,
          fp_inc_additional_info VARCHAR(10) DEFAULT '' NOT NULL,
          fp_return_page VARCHAR(250) DEFAULT '' NOT NULL,
-         fp_message text DEFAULT '' NOT NULL,
+         fp_message text,
 
          cu_enable_copy_to_user VARCHAR(10) DEFAULT '' NOT NULL,
          cu_user_email_field VARCHAR(250) DEFAULT '' NOT NULL,
          cu_subject VARCHAR(250) DEFAULT '' NOT NULL,
-         cu_message text DEFAULT '' NOT NULL,
+         cu_message text,
 
          vs_use_validation VARCHAR(10) DEFAULT '' NOT NULL,
          vs_text_is_required VARCHAR(250) DEFAULT '' NOT NULL,
@@ -143,7 +142,7 @@ function _cp_easyform_install() {
          );";
     $wpdb->query($sql);
 
-    $count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM ".$table ) );
+    $count = $wpdb->get_var( "SELECT COUNT(id) FROM ".$table_name  );
     if (!$count)
     {                
         $wpdb->insert( $table_name, array( 'id' => 1,
@@ -189,7 +188,7 @@ function _cp_easyform_install() {
                       );     
     }
 
-    add_option("cp_easyform_data", 'Default', '', 'yes'); // Creates new database field
+    add_option("cp_easyform_data", 'Default', '', 'yes'); // Creates new database field    
 }
 
 function cp_easyform_remove() {
@@ -221,29 +220,38 @@ function cp_easyform_get_public_form() {
         $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE." WHERE id=".CP_EASYFORM_ID );
     else
         $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE );
-    
-    wp_deregister_script('query-stringify');
-    wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
-    
-    wp_deregister_script('cp_contactformpp_validate_script');
-    wp_register_script('cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
-    
-    wp_enqueue_script( 'cp_easyform_builder_script', 
-    plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-datepicker","query-stringify","cp_easyform_validate_script"), false, true );
+    define ('CP_EASYFORM_ID',$myrows[0]->id);    
+    if (CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING)
+    {
+        wp_deregister_script('query-stringify');
+        wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
         
-    define ('CP_EASYFORM_ID',$myrows[0]->id);
-    wp_localize_script('cp_easyform_builder_script', 'cp_easyform_fbuilder_config', array('obj'  	=>
-    '{"pub":true,"messages": {
-    	                	"required": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required)).'",
-    	                	"email": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email)).'",
-    	                	"datemmddyyyy": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy)).'",
-    	                	"dateddmmyyyy": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy)).'",
-    	                	"number": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number)).'",
-    	                	"digits": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits)).'",
-    	                	"max": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max)).'",
-    	                	"min": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min)).'"
-    	                }}'
-    ));        
+        wp_deregister_script('cp_contactformpp_validate_script');
+        wp_register_script('cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
+        
+        wp_enqueue_script( 'cp_easyform_builder_script', 
+        plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-datepicker","query-stringify","cp_easyform_validate_script"), false, true );
+            
+        
+        wp_localize_script('cp_easyform_builder_script', 'cp_easyform_fbuilder_config', array('obj'  	=>
+        '{"pub":true,"messages": {
+        	                	"required": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required)).'",
+        	                	"email": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email)).'",
+        	                	"datemmddyyyy": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy)).'",
+        	                	"dateddmmyyyy": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy)).'",
+        	                	"number": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number)).'",
+        	                	"digits": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits)).'",
+        	                	"max": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max)).'",
+        	                	"min": "'.str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min)).'"
+        	                }}'
+        ));        
+    }    
+    else
+    {
+        wp_enqueue_script( "jquery" );
+        wp_enqueue_script( "jquery-ui-core" );
+        wp_enqueue_script( "jquery-ui-datepicker" );
+    }
 ?>    
 <script type="text/javascript">     
  function cp_easyform_pform_doValidate(form)
@@ -263,6 +271,26 @@ function cp_easyform_get_public_form() {
 </script>
 <?php    
     @include dirname( __FILE__ ) . '/cp_easyform_public_int.inc.php';
+    if (!CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING)
+    {              
+        // This code won't be used in most cases. This code is for preventing problems in wrong WP themes and conflicts with third party plugins.
+?>
+     <script type="text/javascript">  
+       if (typeof jQuery === "undefined") {           
+           document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></"+"script>");
+           document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js'></"+"script>");
+       }
+     </script>    
+     <script type='text/javascript' src='<?php echo plugins_url('js/jQuery.stringify.js', __FILE__); ?>'></script>
+     <script type='text/javascript' src='<?php echo plugins_url('js/jquery.validate.js', __FILE__); ?>'></script>
+     <script type='text/javascript'>
+     /* <![CDATA[ */
+     var cp_easyform_fbuilder_config = {"obj":"{\"pub\":true,\"messages\": {\n    \t                \t\"required\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required));?>\",\n    \t                \t\"email\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email));?>\",\n    \t                \t\"datemmddyyyy\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy));?>\",\n    \t                \t\"dateddmmyyyy\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy));?>\",\n    \t                \t\"number\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number));?>\",\n    \t                \t\"digits\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits));?>\",\n    \t                \t\"max\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max));?>\",\n    \t                \t\"min\": \"<?php echo str_replace(array('"', "'"),array('\\"', "\\'"),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min));?>\"\n    \t                }}"};
+     /* ]]> */
+     </script>     
+     <script type='text/javascript' src='<?php echo plugins_url('js/fbuilderf.jquery.js', __FILE__); ?>'></script>
+<?php        
+    }
 }
 
 
@@ -513,7 +541,7 @@ function cp_easyform_get_option ($field, $default_value)
 {
     if (!defined("CP_EASYFORM_ID"))
         define ("CP_EASYFORM_ID", 1);
-    global $wpdb, $cp_easyform_option_buffered_item;
+    global $wpdb, $cp_easyform_option_buffered_item, $cp_easyform_option_buffered_id;
     if ($cp_easyform_option_buffered_id == CP_EASYFORM_ID)
         $value = $cp_easyform_option_buffered_item->$field;
     else
