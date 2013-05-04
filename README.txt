@@ -1,7 +1,7 @@
 === CP Easy Form Builder ===
 Contributors: codepeople
 Donate link: http://wordpress.dwbooster.com/forms/cp-easy-form-builder
-Tags: contact form,contact form plugin,form builder,form to email
+Tags: contact form,contact form plugin,form builder,form to email,emailer,forms,form mailer,form creator,form maker,create form,build form
 Requires at least: 3.0.5
 Tested up to: 3.5
 Stable tag: 1.0.1
@@ -47,6 +47,14 @@ To install CP Easy Form Builder, follow these steps:
 A: The product's page contains detailed information about each field and customization:
 
 http://wordpress.dwbooster.com/forms/cp-easy-form-builder
+
+= Q: How can I apply CSS styles to the form fields? =
+
+A: Into the form editor, click a field to edit its details, there is a setting there named "Add CSS Layout Keywords". You can add the class name into that field, so the style specified into the CSS class will be applied to that field.
+
+Note: Don't add style rules directly there but the the name of a CSS class.
+
+You can place the CSS class either into the CSS file of your template or into the file "cp-easy-form-builder\css\stylepublic.css" located into the plugin's folder.
 
 == Screenshots ==
 
