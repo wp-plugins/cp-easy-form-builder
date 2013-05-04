@@ -39,7 +39,7 @@
 		var items = new Array();
 		var itemSelected = -2;
 		editItem = function(id) {
-			if (!opt.pub) $('#tabs').tabs('select', 1);
+			if (!opt.pub) $('#tabs').tabs("option", "active", 1);
 			try { $('#tabs-2').html(items[id].showAllSettings()); } catch (e) {}
 			itemSelected = id;
 			$(".helpfbuilder").click(function(){
@@ -179,7 +179,7 @@
 			items.splice(index,1);
 			for (var i=0;i<items.length;i++)
 				items[i].index = i;
-			$('#tabs').tabs('select', 0);
+			$('#tabs').tabs("option", "active", 0);
 			reloadItems();
 		}
 		reloadItems = function() {
@@ -225,7 +225,7 @@
 			}).mouseout(function(){
 				$(this).removeClass("ui-over")
 			}).click(function(){
-				$('#tabs').tabs('select', 2);
+				$('#tabs').tabs("option", "active", 2);
 				editForm();
 				$(this).siblings().removeClass("ui-selected");
 				$(this).addClass("ui-selected");
@@ -570,7 +570,7 @@
 					return '<div class="fields" id="field-'+this.index+'"><div class="arrow ui-icon ui-icon-play "></div><div class="remove ui-icon ui-icon-trash "></div><div class="section_break"></div><label>'+this.title+'</label><span class="uh">'+this.userhelp+'</span><div class="clearer"></div></div>';
 				},
 				show:function(){
-					return '<div class="fields" id="field-'+this.index+'"><div class="section_break"></div><label>'+this.title+'</label><span class="uh">'+this.userhelp+'</span><div class="clearer"></div></div>';
+                        return '<div class="fields '+this.csslayout+'" id="field-'+this.index+'"><div class="section_break"></div><label>'+this.title+'</label><span class="uh">'+this.userhelp+'</span><div class="clearer"></div></div>';
 				}
 		});
 		var fPhone=function(){};
@@ -617,7 +617,7 @@
 					return '<div class="fields" id="field-'+this.index+'"><div class="arrow ui-icon ui-icon-play "></div><div class="remove ui-icon ui-icon-trash "></div><label>'+this.title+'</label><span class="uh">'+this.userhelp+'</span><div class="clearer"></div></div>';
 				},
 				show:function(){
-					return '<div class="fields" id="field-'+this.index+'"><label>'+this.title+'</label><span class="uh">'+this.userhelp+'</span><div class="clearer"></div></div>';
+                        return '<div class="fields '+this.csslayout+'" id="field-'+this.index+'"><label>'+this.title+'</label><span class="uh">'+this.userhelp+'</span><div class="clearer"></div></div>';
 				}
 		});
 		var fcheck=function(){};
@@ -750,19 +750,19 @@
 		}
 		if (!opt.pub)
 		{
-			$('#tabs').tabs({select: function(event, ui) {
-				   if (ui.index!=1)
-				   {
-					   $(".fields").removeClass("ui-selected");
-					   itemSelected = -2;
-					   if (ui.index==2)
-					   {
-						   $(".fform").addClass("ui-selected");
-						   editForm();
-					   }
-					   else
-						   $(".fform").removeClass("ui-selected");
-				   }
+           $('#tabs').tabs({activate: function(event, ui) {
+                   if ($(this).tabs( "option", "active" )!=1)
+                   {
+                       $(".fields").removeClass("ui-selected");
+                       itemSelected = -2;
+                       if ($(this).tabs( "option", "active" )==2)
+                       {
+                           $(".fform").addClass("ui-selected");
+                           editForm();
+                       }
+                       else
+                           $(".fform").removeClass("ui-selected");
+                   }
 				   else
 				   {
 					   $(".fform").removeClass("ui-selected");
