@@ -19,7 +19,7 @@ define('CP_EASYFORM_TABLE_NAME', @$wpdb->prefix . CP_EASYFORM_TABLE_NAME_NO_PREF
 
 // CP Easy Form constants
 
-define('CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING', false);
+define('CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING', (get_option('CP_EFB_LOAD_SCRIPTS',"1") == "1"?true:false));
 
 define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"Contact Form","description":"You can use the following form to contact us. <br />","formlayout":"top_aligned"}]]');
 
@@ -258,8 +258,8 @@ function cp_easyform_get_public_form() {
  {
     document.cp_easyform_pform.cp_ref_page.value = document.location;
     <?php if (cp_easyform_get_option('cv_enable_captcha', CP_EASYFORM_DEFAULT_cv_enable_captcha) != 'false') { ?>  $dexQuery = jQuery.noConflict();    
-    if (form.hdcaptcha.value == '') { setTimeout( "cp_easyform_cerror()", 100); return false; }      
-    var result = $dexQuery.ajax({ type: "GET", url: "<?php echo cp_easyform_get_site_url(); ?>?cp_easyform_pform_process=2&hdcaptcha="+form.hdcaptcha.value, async: false }).responseText;
+    if (document.cp_easyform_pform.hdcaptcha.value == '') { setTimeout( "cp_easyform_cerror()", 100); return false; }      
+    var result = $dexQuery.ajax({ type: "GET", url: "<?php echo cp_easyform_get_site_url(); ?>?cp_easyform_pform_process=2&hdcaptcha="+document.cp_easyform_pform.hdcaptcha.value, async: false }).responseText;
     if (result == "captchafailed") {
         $dexQuery("#captchaimg").attr('src', $dexQuery("#captchaimg").attr('src')+'&'+Date());
         setTimeout( "cp_easyform_cerror()", 100);
@@ -275,12 +275,10 @@ function cp_easyform_get_public_form() {
     {              
         // This code won't be used in most cases. This code is for preventing problems in wrong WP themes and conflicts with third party plugins.
 ?>
-     <script type="text/javascript">  
-       if (typeof jQuery === "undefined") {           
-           document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js'></"+"script>");
-           document.write ("<"+"script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.20/jquery-ui.min.js'></"+"script>");
-       }
-     </script>    
+     <?php $plugin_url = plugins_url('', __FILE__); ?>
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/jquery.js'; ?>'></script>
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.core.min.js'; ?>'></script>
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.datepicker.min.js'; ?>'></script>    
      <script type='text/javascript' src='<?php echo plugins_url('js/jQuery.stringify.js', __FILE__); ?>'></script>
      <script type='text/javascript' src='<?php echo plugins_url('js/jquery.validate.js', __FILE__); ?>'></script>
      <script type='text/javascript'>
