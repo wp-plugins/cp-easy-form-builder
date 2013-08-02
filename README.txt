@@ -88,7 +88,7 @@ For example if you want to put two form fields into the same line then specify f
 
 This is the CP Easy Form Builder shortcode:
 
-    CP_EASY_FORM_WILL_APPEAR_HERE
+    [CP_EASY_FORM_WILL_APPEAR_HERE]
     
 You can paste it in any place into a post/page or directly into the template using the do_shortcode function. In the edition of pages and posts there is a link that inserts the CP Easy Form Builder shortcode into the page/post.
 
