@@ -1,7 +1,7 @@
 === CP Easy Form Builder ===
 Contributors: codepeople
 Donate link: http://wordpress.dwbooster.com/forms/cp-easy-form-builder
-Tags: contact form,contact form plugin,form builder,form to email,emailer,forms,form mailer,form creator,form maker,create form,build form
+Tags: contact form,contact form plugin,form builder,form to email,emailer,forms,form mailer,form creator,form maker,create form,build form,send email
 Requires at least: 3.0.5
 Tested up to: 3.6
 Stable tag: 1.0.1
