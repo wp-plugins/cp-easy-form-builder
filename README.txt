@@ -133,6 +133,7 @@ You can read more details about that version at http://wordpress.dwbooster.com/f
 = 1.0 =
 * First stable version released.
 * More configuration options added.
+* fixing tags in wp directory
 
 == Upgrade Notice ==
 
