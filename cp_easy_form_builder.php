@@ -21,7 +21,8 @@ define('CP_EASYFORM_TABLE_NAME', @$wpdb->prefix . CP_EASYFORM_TABLE_NAME_NO_PREF
 
 define('CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING', (get_option('CP_EFB_LOAD_SCRIPTS',"1") == "1"?true:false));
 
-define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"Contact Form","description":"You can use the following form to contact us. <br />","formlayout":"top_aligned"}]]');
+
+define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title":"Email","ftype":"femail","userhelp":"","csslayout":"","required":true,"predefined":"","size":"medium"},{"name":"subject","index":1,"title":"Subject","required":true,"ftype":"ftext","userhelp":"","csslayout":"","predefined":"","size":"medium"},{"name":"message","index":2,"size":"large","required":true,"title":"Message","ftype":"ftextarea","userhelp":"","csslayout":"","predefined":""}],[{"title":"Contact Form","description":"You can use the following form to contact us.","formlayout":"top_aligned"}]]');
 
 define('CP_EASYFORM_DEFAULT_fp_subject', 'Contact from the blog...');
 define('CP_EASYFORM_DEFAULT_fp_inc_additional_info', 'true');
@@ -124,6 +125,9 @@ function _cp_easyform_install() {
          vs_text_digits VARCHAR(250) DEFAULT '' NOT NULL,
          vs_text_max VARCHAR(250) DEFAULT '' NOT NULL,
          vs_text_min VARCHAR(250) DEFAULT '' NOT NULL,
+         vs_text_submitbtn VARCHAR(250) DEFAULT '' NOT NULL,
+         vs_text_previousbtn VARCHAR(250) DEFAULT '' NOT NULL,
+         vs_text_nextbtn VARCHAR(250) DEFAULT '' NOT NULL,
 
          cv_enable_captcha VARCHAR(20) DEFAULT '' NOT NULL,
          cv_width VARCHAR(20) DEFAULT '' NOT NULL,
@@ -171,6 +175,9 @@ function _cp_easyform_install() {
                                       'vs_text_digits' => get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits),
                                       'vs_text_max' => get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max),
                                       'vs_text_min' => get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min),
+                                      'vs_text_submitbtn' => get_option('vs_text_submitbtn', 'Submit'),
+                                      'vs_text_previousbtn' => get_option('vs_text_previousbtn', 'Previous'),
+                                      'vs_text_nextbtn' => get_option('vs_text_nextbtn', 'Next'), 
 
                                       'cv_enable_captcha' => get_option('cv_enable_captcha', CP_EASYFORM_DEFAULT_cv_enable_captcha),
                                       'cv_width' => get_option('cv_width', CP_EASYFORM_DEFAULT_cv_width),
@@ -203,26 +210,44 @@ function cp_easyform_filter_content($atts) {
     extract( shortcode_atts( array(
 		'id' => '',
 	), $atts ) );
+    //if ($id != '')
+    //    define ('CP_EASYFORM_ID',$id);
 
     ob_start();
-    define('CP_AUTH_INCLUDE', true);
-    cp_easyform_get_public_form(); 
+    if (!defined('CP_AUTH_INCLUDE')) define('CP_AUTH_INCLUDE', true);
+    cp_easyform_get_public_form($id); 
     $buffered_contents = ob_get_contents();
     ob_end_clean();
     
     return $buffered_contents;
 }
 
-function cp_easyform_get_public_form() {
+
+
+$CP_EFB_global_form_count_number = 0;
+$CP_EFB_global_form_count = "_".$CP_EFB_global_form_count_number;
+
+function cp_easyform_get_public_form($id = 1) {
     global $wpdb; 
+    global $CP_EFB_global_form_count;
+    global $CP_EFB_global_form_count_number;
+    $CP_EFB_global_form_count_number++;
+    $CP_EFB_global_form_count = "_".$CP_EFB_global_form_count_number;      
     
-    if (defined('CP_EASYFORM_ID'))
-        $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE." WHERE id=".CP_EASYFORM_ID );
+    if ($id)
+        $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE." WHERE id=".$id );
     else
         $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE );
-    define ('CP_EASYFORM_ID',$myrows[0]->id);    
+    //define ('CP_EASYFORM_ID',$myrows[0]->id);     
+    $id = $myrows[0]->id;
+    
+    $previous_label = cp_easyform_get_option('vs_text_previousbtn', 'Previous',$id);
+    $previous_label = ($previous_label==''?'Previous':$previous_label);
+    $next_label = cp_easyform_get_option('vs_text_nextbtn', 'Next',$id);
+    $next_label = ($next_label==''?'Next':$next_label);  
+        
     if (CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING)
-    {
+    {    
         wp_deregister_script('query-stringify');
         wp_register_script('query-stringify', plugins_url('/js/jQuery.stringify.js', __FILE__));
         
@@ -230,46 +255,51 @@ function cp_easyform_get_public_form() {
         wp_register_script('cp_easyform_validate_script', plugins_url('/js/jquery.validate.js', __FILE__));
         
         wp_enqueue_script( 'cp_easyform_builder_script', 
-        plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-datepicker","query-stringify","cp_easyform_validate_script"), false, true );
-            
+        plugins_url('/js/fbuilderf.jquery.js', __FILE__),array("jquery","jquery-ui-core","jquery-ui-datepicker","jquery-ui-widget","jquery-ui-position","jquery-ui-tooltip","query-stringify","cp_easyform_validate_script"), false, true );
         
-        wp_localize_script('cp_easyform_builder_script', 'cp_easyform_fbuilder_config', array('obj'  	=>
-        '{"pub":true,"messages": {
-        	                	"required": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required)).'",
-        	                	"email": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email)).'",
-        	                	"datemmddyyyy": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy)).'",
-        	                	"dateddmmyyyy": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy)).'",
-        	                	"number": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number)).'",
-        	                	"digits": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits)).'",
-        	                	"max": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max)).'",
-        	                	"min": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min)).'"
+           
+        wp_localize_script('cp_easyform_builder_script', 'cp_easyform_fbuilder_config'.$CP_EFB_global_form_count, array('obj'  	=>
+        '{"pub":true,"identifier":"'.$CP_EFB_global_form_count.'","messages": {
+        	                	"required": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required,$id)).'",
+        	                	"email": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email,$id)).'",
+        	                	"datemmddyyyy": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy,$id)).'",
+        	                	"dateddmmyyyy": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy,$id)).'",
+        	                	"number": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number,$id)).'",
+        	                	"digits": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits,$id)).'",
+        	                	"max": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max,$id)).'",
+        	                	"min": "'.str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min,$id)).'",
+    	                    	"previous": "'.str_replace(array('"'),array('\\"'),$previous_label).'",
+    	                    	"next": "'.str_replace(array('"'),array('\\"'),$next_label).'"
         	                }}'
-        ));        
-    }    
+        ));  
+    }
     else
     {
         wp_enqueue_script( "jquery" );
         wp_enqueue_script( "jquery-ui-core" );
         wp_enqueue_script( "jquery-ui-datepicker" );
-    }
+    }     
 ?>    
 <script type="text/javascript">     
- function cp_easyform_pform_doValidate(form)
+ function cp_easyform_pform_doValidate<?php echo $CP_EFB_global_form_count; ?>(form)
  {
-    document.cp_easyform_pform.cp_ref_page.value = document.location;
-    <?php if (cp_easyform_get_option('cv_enable_captcha', CP_EASYFORM_DEFAULT_cv_enable_captcha) != 'false') { ?>  $dexQuery = jQuery.noConflict();    
-    if (document.cp_easyform_pform.hdcaptcha.value == '') { setTimeout( "cp_easyform_cerror()", 100); return false; }      
-    var result = $dexQuery.ajax({ type: "GET", url: "<?php echo cp_easyform_get_site_url(); ?>?cp_easyform_pform_process=2&hdcaptcha="+document.cp_easyform_pform.hdcaptcha.value, async: false }).responseText;
+    form.cp_ref_page.value = document.location;
+    <?php if (cp_easyform_get_option('cv_enable_captcha', CP_EASYFORM_DEFAULT_cv_enable_captcha,$id) != 'false') { ?>  $dexQuery = jQuery.noConflict();    
+    if (form.hdcaptcha.value == '') { setTimeout( "cp_easyform_cerror('<?php echo $CP_EFB_global_form_count; ?>')", 100); return false; }          
+    var result = $dexQuery.ajax({ type: "GET", url: "<?php echo cp_easyform_get_site_url(); ?>?ps=<?php echo $CP_EFB_global_form_count; ?>&cp_easyform_pform_process=2&hdcaptcha="+form.hdcaptcha.value, async: false }).responseText;
     if (result == "captchafailed") {
-        $dexQuery("#captchaimg").attr('src', $dexQuery("#captchaimg").attr('src')+'&'+Date());
-        setTimeout( "cp_easyform_cerror()", 100);
+        $dexQuery("#captchaimg<?php echo $CP_EFB_global_form_count; ?>").attr('src', $dexQuery("#captchaimg<?php echo $CP_EFB_global_form_count; ?>").attr('src')+'&'+Date());
+        setTimeout( "cp_easyform_cerror('<?php echo $CP_EFB_global_form_count; ?>')", 100);
         return false;
     } else <?php } ?>
         return true;
  }
- function cp_easyform_cerror(){$dexQuery = jQuery.noConflict();$dexQuery("#hdcaptcha_error").css('top',$dexQuery("#hdcaptcha").outerHeight());$dexQuery("#hdcaptcha_error").css("display","inline");}
+ function cp_easyform_cerror(id){$dexQuery = jQuery.noConflict();$dexQuery("#hdcaptcha_error"+id).css('top',$dexQuery("#hdcaptcha"+id).outerHeight());$dexQuery("#hdcaptcha_error"+id).css("display","inline");}
 </script>
 <?php    
+    $button_label = cp_easyform_get_option('vs_text_submitbtn', 'Submit',$id);
+    $button_label = ($button_label==''?'Submit':$button_label);
+    
     @include dirname( __FILE__ ) . '/cp_easyform_public_int.inc.php';
     if (!CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING)
     {              
@@ -278,17 +308,20 @@ function cp_easyform_get_public_form() {
      <?php $plugin_url = plugins_url('', __FILE__); ?>
      <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/jquery.js'; ?>'></script>
      <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.core.min.js'; ?>'></script>
-     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.datepicker.min.js'; ?>'></script>    
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.datepicker.min.js'; ?>'></script>       
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.widget.min.js'; ?>'></script>
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.position.min.js'; ?>'></script>
+     <script type='text/javascript' src='<?php echo $plugin_url.'/../../../wp-includes/js/jquery/ui/jquery.ui.tooltip.min.js'; ?>'></script>
      <script type='text/javascript' src='<?php echo plugins_url('js/jQuery.stringify.js', __FILE__); ?>'></script>
      <script type='text/javascript' src='<?php echo plugins_url('js/jquery.validate.js', __FILE__); ?>'></script>
      <script type='text/javascript'>
      /* <![CDATA[ */
-     var cp_easyform_fbuilder_config = {"obj":"{\"pub\":true,\"messages\": {\n    \t                \t\"required\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required));?>\",\n    \t                \t\"email\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email));?>\",\n    \t                \t\"datemmddyyyy\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy));?>\",\n    \t                \t\"dateddmmyyyy\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy));?>\",\n    \t                \t\"number\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number));?>\",\n    \t                \t\"digits\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits));?>\",\n    \t                \t\"max\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max));?>\",\n    \t                \t\"min\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min));?>\"\n    \t                }}"};
+     var cp_easyform_fbuilder_config<?php echo $CP_EFB_global_form_count; ?> = {"obj":"{\"pub\":true,\"identifier\":\"<?php echo $CP_EFB_global_form_count; ?>\",\"messages\": {\n    \t                \t\"required\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_required', CP_EASYFORM_DEFAULT_vs_text_is_required,$id));?>\",\n    \t                \t\"email\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_is_email', CP_EASYFORM_DEFAULT_vs_text_is_email,$id));?>\",\n    \t                \t\"datemmddyyyy\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_datemmddyyyy', CP_EASYFORM_DEFAULT_vs_text_datemmddyyyy,$id));?>\",\n    \t                \t\"dateddmmyyyy\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_dateddmmyyyy', CP_EASYFORM_DEFAULT_vs_text_dateddmmyyyy,$id));?>\",\n    \t                \t\"number\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_number', CP_EASYFORM_DEFAULT_vs_text_number,$id));?>\",\n    \t                \t\"digits\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_digits', CP_EASYFORM_DEFAULT_vs_text_digits,$id));?>\",\n    \t                \t\"max\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_max', CP_EASYFORM_DEFAULT_vs_text_max,$id));?>\",\n    \t                \t\"min\": \"<?php echo str_replace(array('"'),array('\\"'),cp_easyform_get_option('vs_text_min', CP_EASYFORM_DEFAULT_vs_text_min,$id));?>\",\"previous\": \"<?php echo str_replace(array('"'),array('\\"'),$previous_label); ?>\",\"next\": \"<?php echo str_replace(array('"'),array('\\"'),$next_label); ?>\"\n    \t                }}"};
      /* ]]> */
      </script>     
      <script type='text/javascript' src='<?php echo plugins_url('js/fbuilderf.jquery.js', __FILE__); ?>'></script>
 <?php        
-    }
+    }    
 }
 
 
@@ -317,7 +350,7 @@ if ( is_admin() ) {
         add_options_page('CP Easy Form Builder Options', 'CP Easy Form Builder', 'manage_options', 'cp_easy_form_builder', 'cp_easyform_html_post_page' );
     }
 } else { // if not admin
-    add_shortcode( 'CP_EASY_FORM_WILL_APPEAR_HERE', 'cp_easyform_filter_content' );        
+    add_shortcode( 'CP_EASY_FORM_WILL_APPEAR_HERE', 'cp_easyform_filter_content' );    
 }
 
 function cp_easyform_settingsLink($links) {
@@ -361,6 +394,8 @@ function set_cp_easyform_insert_adminScripts($hook) {
     wp_enqueue_script( 'cp_easyform_script', plugins_url('/cp_easyform_scripts.js', __FILE__) );
 }
 
+
+
 function cp_easyform_get_site_url()
 {
     $url = parse_url(get_site_url());
@@ -393,9 +428,10 @@ function cp_easy_form_check_posted_data() {
     }    
     
     @session_start(); 
+    if (isset($_GET["ps"])) $sequence = $_GET["ps"]; else if (isset($_POST["cp_pform_psequence"])) $sequence = $_POST["cp_pform_psequence"];
     if ( isset( $_GET['cp_easyform_pform_process'] ) && $_GET['cp_easyform_pform_process'] == "2")
     {
-        if ($_GET['hdcaptcha'] != $_SESSION['rand_code'] || $_SESSION['rand_code'] == '')
+        if (@$_GET['hdcaptcha'] != $_SESSION['rand_code'.$sequence] || $_SESSION['rand_code'.$sequence] == '')
         {
             echo 'captchafailed';
             exit;
@@ -411,12 +447,12 @@ function cp_easy_form_check_posted_data() {
 		return;
 
     define("CP_EASYFORM_ID",$_POST["cp_easyform_id"]);    
-    if ( (cp_easyform_get_option('cv_enable_captcha', CP_EASYFORM_DEFAULT_cv_enable_captcha) != 'false') && ($_POST['hdcaptcha'] != $_SESSION['rand_code']))
+    if ( (cp_easyform_get_option('cv_enable_captcha', CP_EASYFORM_DEFAULT_cv_enable_captcha) != 'false') && ($_POST['hdcaptcha'] != $_SESSION['rand_code'.$sequence]))
     {
         echo 'captchafailed';
         exit;
     }
-    $_SESSION['rand_code'] = '';
+    $_SESSION['rand_code'.$sequence] = '';
 
 
     // get form info
@@ -430,7 +466,7 @@ function cp_easy_form_check_posted_data() {
         if ($item->ftype == 'fPhone' || $item->ftype == 'fcheck' || $item->ftype == 'fcheck' || $item->ftype == 'fdropdown' || $item->ftype == 'fdate') // join fields for phone fields                       
         {
             echo "Phone, radio, checkboxes, date and dropdown fields aren't supported in this version. Please check at <a href=\"http://wordpress.dwbooster.com/forms/cp-easy-form-builder\">http://wordpress.dwbooster.com/forms/cp-easy-form-builder</a>";exit;
-        }    
+        }     
     } 
 
     // grab posted data
@@ -438,14 +474,14 @@ function cp_easy_form_check_posted_data() {
 
     $buffer = "";
     foreach ($_POST as $item => $value)
-        if (isset($fields[$item]))
-            $buffer .= $fields[$item] . ": ". (is_array($value)?(implode(", ",$value)):($value)) . "\n\n";
+        if (isset($fields[str_replace($sequence,'',$item)]))
+            $buffer .= $fields[str_replace($sequence,'',$item)] . ": ". (is_array($value)?(implode(", ",$value)):($value)) . "\n\n";
     $attachments = array();     
     foreach ($_FILES as $item => $value)  
         if (isset($fields[$item]))
         {           
             echo "File uploads aren't supported in this version. Please check at <a href=\"http://wordpress.dwbooster.com/forms/cp-easy-form-builder\">http://wordpress.dwbooster.com/forms/cp-easy-form-builder</a>";exit;
-        }  
+        }   
                     
     $buffer_A = $buffer;
     if ('true' == cp_easyform_get_option('fp_inc_additional_info', CP_EASYFORM_DEFAULT_fp_inc_additional_info))
@@ -462,10 +498,10 @@ function cp_easy_form_check_posted_data() {
     // 1- Send email
     //---------------------------
     $message = str_replace('<%INFO%>',$buffer,cp_easyform_get_option('fp_message', CP_EASYFORM_DEFAULT_fp_message));
-    
     $subject = cp_easyform_get_option('fp_subject', CP_EASYFORM_DEFAULT_fp_subject);
+
     $from = cp_easyform_get_option('fp_from_email', CP_EASYFORM_DEFAULT_fp_from_email);
-    $to = explode(",",cp_easyform_get_option('fp_destination_emails', CP_EASYFORM_DEFAULT_fp_destination_emails));
+    $to = explode(",",cp_easyform_get_option('fp_destination_emails', CP_EASYFORM_DEFAULT_fp_destination_emails));   
 
     foreach ($to as $item)
         if (trim($item) != '')
@@ -480,12 +516,17 @@ function cp_easy_form_check_posted_data() {
     exit;
 }
 
+
 function cp_easyform_save_options() 
 {
     global $wpdb;
     if (!defined('CP_EASYFORM_ID'))
         define ('CP_EASYFORM_ID',$_POST["cp_easyform_id"]);
     
+
+    cp_easyform_add_field_verify($wpdb->prefix.CP_EASYFORM_FORMS_TABLE,'vs_text_submitbtn'," varchar(250) NOT NULL default ''");
+    cp_easyform_add_field_verify($wpdb->prefix.CP_EASYFORM_FORMS_TABLE,'vs_text_previousbtn'," varchar(250) NOT NULL default ''");
+    cp_easyform_add_field_verify($wpdb->prefix.CP_EASYFORM_FORMS_TABLE,'vs_text_nextbtn'," varchar(250) NOT NULL default ''");   
 
     foreach ($_POST as $item => $value)    
         $_POST[$item] = stripcslashes($value);
@@ -501,7 +542,7 @@ function cp_easyform_save_options()
                   'fp_message' => $_POST['fp_message'],
 
                   'cu_enable_copy_to_user' => $_POST['cu_enable_copy_to_user'],
-                  'cu_user_email_field' => $_POST['cu_user_email_field'],
+                  'cu_user_email_field' => @$_POST['cu_user_email_field'],
                   'cu_subject' => $_POST['cu_subject'],
                   'cu_message' => $_POST['cu_message'],
 
@@ -514,6 +555,9 @@ function cp_easyform_save_options()
                   'vs_text_digits' => $_POST['vs_text_digits'],
                   'vs_text_max' => $_POST['vs_text_max'],
                   'vs_text_min' => $_POST['vs_text_min'],
+                  'vs_text_submitbtn' => $_POST['vs_text_submitbtn'],
+                  'vs_text_previousbtn' => $_POST['vs_text_previousbtn'],
+                  'vs_text_nextbtn' => $_POST['vs_text_nextbtn'],
 
                   'cv_enable_captcha' => $_POST['cv_enable_captcha'],
                   'cv_width' => $_POST['cv_width'],
@@ -531,23 +575,39 @@ function cp_easyform_save_options()
     $wpdb->update ( $wpdb->prefix.CP_EASYFORM_FORMS_TABLE, $data, array( 'id' => CP_EASYFORM_ID ));    
 }
 
+function cp_easyform_add_field_verify ($table, $field, $type = "text") 
+{
+    global $wpdb;
+    $results = $wpdb->get_results("SHOW columns FROM `".$table."` where field='".$field."'");    
+    if (!count($results))
+    {               
+        $sql = "ALTER TABLE  `".$table."` ADD `".$field."` ".$type; 
+        $wpdb->query($sql);
+    }
+}
+
 // cp_easyform_get_option:
 $cp_easyform_option_buffered_item = false;
 $cp_easyform_option_buffered_id = -1;
 
-function cp_easyform_get_option ($field, $default_value)
+function cp_easyform_get_option ($field, $default_value, $id = '1')
 {
     if (!defined("CP_EASYFORM_ID"))
-        define ("CP_EASYFORM_ID", 1);
+    {
+        if (!defined("CP_EASYFORM_ID"))
+            define ("CP_EASYFORM_ID", 1);
+    }    
+    if ($id == '') 
+        $id = CP_EASYFORM_ID;
     global $wpdb, $cp_easyform_option_buffered_item, $cp_easyform_option_buffered_id;
-    if ($cp_easyform_option_buffered_id == CP_EASYFORM_ID)
-        $value = $cp_easyform_option_buffered_item->$field;
+    if ($cp_easyform_option_buffered_id == $id)
+        $value = @$cp_easyform_option_buffered_item->$field;
     else
     {
-       $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE." WHERE id=".CP_EASYFORM_ID );
-       $value = $myrows[0]->$field;       
+       $myrows = $wpdb->get_results( "SELECT * FROM ".$wpdb->prefix.CP_EASYFORM_FORMS_TABLE." WHERE id=".$id );
+       $value = @$myrows[0]->$field;       
        $cp_easyform_option_buffered_item = $myrows[0];
-       $cp_easyform_option_buffered_id  = CP_EASYFORM_ID;
+       $cp_easyform_option_buffered_id  = $id;
     }
     return $value;
 }
@@ -569,7 +629,7 @@ class CP_EasyForm_Widget extends WP_Widget
   {
     $instance = wp_parse_args( (array) $instance, array( 'title' => '' ) );
     $title = $instance['title'];
-    ?><p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo attribute_escape($title); ?>" /></label></p><?php
+    ?><p><label for="<?php echo $this->get_field_id('title'); ?>">Title: <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr($title); ?>" /></label></p><?php
   }
 
   function update($new_instance, $old_instance)
