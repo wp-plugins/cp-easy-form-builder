@@ -86,11 +86,34 @@ For example if you want to put two form fields into the same line then specify f
 
 = Q: Which is the CP Easy Form Builder shortcode for publishing the form? = 
 
-This is the CP Easy Form Builder shortcode:
+A: This is the CP Easy Form Builder shortcode:
 
     [CP_EASY_FORM_WILL_APPEAR_HERE]
     
 You can paste it in any place into a post/page or directly into the template using the do_shortcode function. In the edition of pages and posts there is a link that inserts the CP Easy Form Builder shortcode into the page/post.
+
+
+= Q: How to modify the submit button design? = 
+
+A:  The class="pbSubmit" can be used to modify the button styles. 
+
+The styles can be applied into any of the CSS files of your theme or into the CSS file "cp-easy-form-builder\css\stylepublic.css". 
+
+For further modifications the submit button is located at the end of the file "cp_easyform_public_int.inc.php".
+
+= Q: How to edit the submit label? = 
+
+A: There is a new settings box in the CP Easy Form Builder settings named "Submit Button". You can edit the submit button label there and get info about editing its CSS styles.
+
+
+= Q: Can I display hits on each field with instructions for the user? = 
+
+A: Yes, into the form builder click the field and you will see various options in the "Field Settings" tab. In this case you are interested in the option labeled "Instructions for User".
+
+Type the instruction in the settings field "Instructions for User" and click the checkbox labeled "Show as floating tooltip" below that field, this way the instructions will appear when the field receives the focus (when the user enters to the field to type something).
+
+If the checkbox "Show as floating tooltip" isn't marked then the instructions will appear always displayed immediately below the field in the form.
+
 
 == Other Notes ==
 

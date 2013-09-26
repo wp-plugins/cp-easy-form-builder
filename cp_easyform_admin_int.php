@@ -41,8 +41,8 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
      <link href="<?php echo plugins_url('css/style.css', __FILE__); ?>" type="text/css" rel="stylesheet" />   
      <link href="<?php echo plugins_url('css/cupertino/jquery-ui-1.8.20.custom.css', __FILE__); ?>" type="text/css" rel="stylesheet" />   
         
-     <script type="text/javascript">          
-       $easyFormQuery = jQuery.noConflict();
+     <script type="text/javascript">        
+       $easyFormQuery = jQuery.noConflict();  
        if (typeof $easyFormQuery == 'undefined')
        {
          // This code won't be used in most cases. This code is for preventing problems in wrong WP themes and conflicts with third party plugins.
@@ -52,7 +52,7 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
          document.write ("<"+"script type='text/javascript' src='<?php echo plugins_url('js/jquery.validate.js', __FILE__); ?>'></"+"script>");         
          document.write ("<"+"script type='text/javascript' src='<?php echo plugins_url('js/fbuilderf.jquery.js', __FILE__); ?>'></"+"script>");         
        } 
-     </script>
+     </script>        
         
      <script>     
          
@@ -65,7 +65,7 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
             });  
                  
             $easyFormQuery(".itemForm").click(function() {
-                f.fBuild.addItem($easyFormQuery(this).attr("id"));
+     	       f.fBuild.addItem($easyFormQuery(this).attr("id"));
      	   });  
           
            $easyFormQuery( ".itemForm" ).draggable({revert1: "invalid",helper: "clone",cursor: "move"});
@@ -125,11 +125,37 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
          <div class="clearer"></div>
          
      </div>       
-  <p style="font-size:12px;">&nbsp; <strong>Note:</strong> Some of the field types and additional features are available only in the <a href="http://wordpress.dwbooster.com/forms/cp-easy-form-builder">pro version</a>.</p>
+   <p style="font-size:12px;">&nbsp; <strong>Note:</strong> Some of the field types and additional features are available only in the <a href="http://wordpress.dwbooster.com/forms/cp-easy-form-builder">pro version</a>.</p>
    
   </div>    
  </div> 
 
+
+ <div id="metabox_basic_settings" class="postbox" >
+  <h3 class='hndle' style="padding:5px;"><span>Submit Button</span></h3>
+  <div class="inside">   
+     <table class="form-table">    
+        <tr valign="top">
+        <th scope="row">Submit button label (text):</th>
+        <td><input type="text" name="vs_text_submitbtn" size="40" value="<?php $label = esc_attr(cp_easyform_get_option('vs_text_submitbtn', 'Submit')); echo ($label==''?'Submit':$label); ?>" /></td>
+        </tr>
+        <tr valign="top">
+        <th scope="row">Previous button label (text):</th>
+        <td><input type="text" name="vs_text_previousbtn" size="40" value="<?php $label = esc_attr(cp_easyform_get_option('vs_text_previousbtn', 'Previous')); echo ($label==''?'Previous':$label); ?>" /></td>
+        </tr>    
+        <tr valign="top">
+        <th scope="row">Next button label (text):</th>
+        <td><input type="text" name="vs_text_nextbtn" size="40" value="<?php $label = esc_attr(cp_easyform_get_option('vs_text_nextbtn', 'Next')); echo ($label==''?'Next':$label); ?>" /></td>
+        </tr>  
+        <tr valign="top">
+        <td colspan="2"> - The  <em>class="pbSubmit"</em> can be used to modify the button styles. <br />
+        - The styles can be applied into any of the CSS files of your theme or into the CSS file <em>"cp-easy-form-builder\css\stylepublic.css"</em>. <br />
+        - For further modifications the submit button is located at the end of the file <em>"cp_easyform_public_int.inc.php"</em>.<br />
+        - For general CSS styles modifications to the form and samples <a href="http://wordpress.dwbooster.com/faq/cp-easy-form-builder#q99" target="_blank">check this FAQ</a>.
+        </tr>
+     </table>
+  </div>    
+ </div> 
  
  <div id="metabox_basic_settings" class="postbox" >
   <h3 class='hndle' style="padding:5px;"><span>Form Processing / Email Settings</span></h3>
@@ -178,9 +204,10 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
         <th scope="row">Send confirmation/thank you message to user?</th>
         <td>
           <?php $option = cp_easyform_get_option('cu_enable_copy_to_user', CP_EASYFORM_DEFAULT_cu_enable_copy_to_user); ?>
-          <select name="cu_enable_copy_to_user">           
+          <select name="cu_enable_copy_to_user">
            <option value="false"<?php if ($option == 'false') echo ' selected'; ?>>No</option>
           </select>
+          *<em>This version doesn't support the copy to user. <a href="http://wordpress.dwbooster.com/forms/cp-easy-form-builder">Click for other versions</a>.</em>
         </td>
         </tr>
         <tr valign="top">
