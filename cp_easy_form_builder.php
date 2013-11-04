@@ -212,7 +212,7 @@ function cp_easyform_filter_content($atts) {
 	), $atts ) );
     //if ($id != '')
     //    define ('CP_EASYFORM_ID',$id);
-    $id = str_replace("quot;","",$id);
+    $id = str_replace("&quot;","",$id);
     ob_start();
     if (!defined('CP_AUTH_INCLUDE')) define('CP_AUTH_INCLUDE', true);
     cp_easyform_get_public_form($id); 
