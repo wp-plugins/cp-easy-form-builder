@@ -530,7 +530,11 @@ function cp_easyform_save_options()
 
     foreach ($_POST as $item => $value)    
         $_POST[$item] = stripcslashes($value);
-
+        
+    if (substr($_POST['form_structure'],-5,1)=="\\")
+    foreach ($_POST as $item => $value)
+        $_POST[$item] = stripcslashes($value);
+        
     $data = array(
                   'form_structure' => $_POST['form_structure'],
 
