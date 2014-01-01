@@ -662,6 +662,6 @@ class CP_EasyForm_Widget extends WP_Widget
 
 }
 
-add_action( 'widgets_init', create_function('', 'return register_widget("CP_EasyForm_Widget");') );
+//add_action( 'widgets_init', create_function('', 'return register_widget("CP_EasyForm_Widget");') );
 
 ?>
