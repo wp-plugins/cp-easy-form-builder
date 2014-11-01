@@ -94,6 +94,7 @@ for ($i = 0; $i < $letter_count; $i++) {
 }
 $_SESSION['rand_code'.$_GET["ps"]] = str_replace(" ", "", $str);
 
+setCookie('rand_code'.$_GET["ps"], md5(str_replace(" ", "", $str)), time()+36000,"/");
 
 $image = imagecreatetruecolor($imgX, $imgY);
 $backgr_col = imagecolorallocate($image, $bcolor["r"],$bcolor["g"],$bcolor["b"]);
