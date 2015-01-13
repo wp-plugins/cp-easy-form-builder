@@ -3,7 +3,7 @@
 Plugin Name: CP Easy Form Builder
 Plugin URI: http://wordpress.dwbooster.com/forms/cp-easy-form-builder
 Description: This plugin allows you to easily insert forms into your website and get them via email.
-Version: 1.01
+Version: 1.1.2
 Author: CodePeople.net
 Author URI: http://codepeople.net
 License: GPL
@@ -27,12 +27,12 @@ define('CP_EASYFORM_DEFAULT_form_structure', '[[{"name":"email","index":0,"title
 define('CP_EASYFORM_DEFAULT_fp_subject', 'Contact from the blog...');
 define('CP_EASYFORM_DEFAULT_fp_inc_additional_info', 'true');
 define('CP_EASYFORM_DEFAULT_fp_return_page', get_site_url());
-define('CP_EASYFORM_DEFAULT_fp_message', "The following contact message has been sent:\n\n<%INFO%>\n\n");
+define('CP_EASYFORM_DEFAULT_fp_message', "The following contact message has been sent:\n\n<"."%INFO%".">\n\n");
 
 define('CP_EASYFORM_DEFAULT_cu_enable_copy_to_user', 'true');
 define('CP_EASYFORM_DEFAULT_cu_user_email_field', '');
 define('CP_EASYFORM_DEFAULT_cu_subject', 'Confirmation: Message received...');
-define('CP_EASYFORM_DEFAULT_cu_message', "Thank you for your message. We will reply you as soon as possible.\n\nThis is a copy of the data sent:\n\n<%INFO%>\n\nBest Regards.");
+define('CP_EASYFORM_DEFAULT_cu_message', "Thank you for your message. We will reply you as soon as possible.\n\nThis is a copy of the data sent:\n\n<"."%INFO%".">\n\nBest Regards.");
 
 define('CP_EASYFORM_DEFAULT_vs_use_validation', 'true');
 
@@ -351,6 +351,8 @@ if ( is_admin() ) {
 
     function cp_easyform_admin_menu() {
         add_options_page('CP Easy Form Builder Options', 'CP Easy Form Builder', 'manage_options', 'cp_easy_form_builder', 'cp_easyform_html_post_page' );
+        add_menu_page( 'CP Easy Form Builder Options', 'CP Easy Form Builder', 'edit_pages', 'cp_easy_form_builder', 'cp_easyform_html_post_page' );
+        add_submenu_page( 'cp_easy_form_builder', 'Upgrade', 'Upgrade', 'edit_pages', "cp_easy_form_builder_upgrade", 'cp_easyform_html_post_page' );
     }
 } else { // if not admin
     add_shortcode( 'CP_EASY_FORM_WILL_APPEAR_HERE', 'cp_easyform_filter_content' );    
@@ -377,6 +379,11 @@ function cp_easyform_customAdjustmentsLink($links) {
 function cp_easyform_html_post_page() {
     if (isset($_GET["cal"]) && $_GET["cal"] != '')
         @include_once dirname( __FILE__ ) . '/cp_easyform_admin_int.php';
+    else if ($_GET["page"] == 'cp_easy_form_builder_upgrade')
+    {
+            echo("Redirecting to upgrade page...<script type='text/javascript'>document.location='http://wordpress.dwbooster.com/forms/cp-easy-form-builder#download';</script>");
+            exit;
+    }
     else
         @include_once dirname( __FILE__ ) . '/cp_easyform_admin_int_list.inc.php';        
 }
@@ -500,7 +507,7 @@ function cp_easy_form_check_posted_data() {
 
     // 1- Send email
     //---------------------------
-    $message = str_replace('<%INFO%>',$buffer,cp_easyform_get_option('fp_message', CP_EASYFORM_DEFAULT_fp_message));
+    $message = str_replace('<'.'%INFO%'.'>',$buffer,cp_easyform_get_option('fp_message', CP_EASYFORM_DEFAULT_fp_message));
     $subject = cp_easyform_get_option('fp_subject', CP_EASYFORM_DEFAULT_fp_subject);
 
     $from = cp_easyform_get_option('fp_from_email', CP_EASYFORM_DEFAULT_fp_from_email);
@@ -621,8 +628,7 @@ function cp_easyform_get_option ($field, $default_value, $id = '1')
 
 
 
-// WIDGET CODE BELOW
-// ***********************************************************************
+
 
 class CP_EasyForm_Widget extends WP_Widget
 {
@@ -665,6 +671,6 @@ class CP_EasyForm_Widget extends WP_Widget
 
 }
 
-//add_action( 'widgets_init', create_function('', 'return register_widget("CP_EasyForm_Widget");') );
+add_action( 'widgets_init', create_function('', 'return register_widget("CP_EasyForm_Widget");') );
 
 ?>

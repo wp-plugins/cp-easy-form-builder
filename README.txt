@@ -4,7 +4,7 @@ Donate link: http://wordpress.dwbooster.com/forms/cp-easy-form-builder
 Tags: contact form,contact form plugin,form builder,form to email,emailer,forms,form mailer,form creator,form maker,create form,build form,send email
 Requires at least: 3.0.5
 Tested up to: 4.1
-Stable tag: 1.0.1
+Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -158,7 +158,27 @@ You can read more details about that version at http://wordpress.dwbooster.com/f
 * More configuration options added.
 * fixing tags in wp directory
 
+= 1.0.1 =
+* Several bug fixes
+* Compatible with latest WP versions
+
+= 1.1.2 =
+* Compatible with latest WP versions
+* Better interface and access to the plugin options
+* Captcha image works better in different server environments
+* Minor bug fixes
+
+Important note: If you are using the Professional version don't update via the WP dashboard but using your personal update link. Contact us if you need further information: http://wordpress.dwbooster.com/support
+
+
 == Upgrade Notice ==
 
-= 1.0.1 =
-First stable version released.
+Very Important note: If you are using the Professional version don't update via the WP dashboard but using your personal update link. Contact us if you need further information: http://wordpress.dwbooster.com/support
+
+= 1.1.2 =
+* Compatible with latest WP versions
+* Better interface and access to the plugin options
+* Captcha image works better in different server environments
+* Minor bug fixes
+
+Important note: If you are using the Professional version don't update via the WP dashboard but using your personal update link. Contact us if you need further information: http://wordpress.dwbooster.com/support

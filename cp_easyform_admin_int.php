@@ -20,7 +20,7 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
 <div class="wrap">
 <h2>CP Easy Form Builder</h2>
 
-<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='options-general.php?page=cp_easy_form_builder';">
+<input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=cp_easy_form_builder';">
 <br /><br />
 
 <form method="post" action="" name="cpformconf"> 
@@ -124,8 +124,28 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
          </div>
          <div class="clearer"></div>
          
-     </div>       
-   <p style="font-size:12px;">&nbsp; <strong>Note:</strong> Some of the field types and additional features are available only in the <a href="http://wordpress.dwbooster.com/forms/cp-easy-form-builder">pro version</a>.</p>
+     </div>          
+  <div style="border:1px dotted black;background-color:#ffffbb;padding-left:15px;padding-right:15px;padding-top:5px;width:650px;font-size:12px;color:#000000;"> 
+   <p>The form builder supports 3 fields in this free version: "Single Line Text", "Email" and "Text-area".</p>
+   <p>The full set of fields is available in the <a href="http://wordpress.dwbooster.com/forms/cp-easy-form-builder#download">CP Easy Form Builder - pro version</a>. It also supports:
+   <ul>
+    <li>&nbsp; - Dependand fields: Hide/show fields based in previous selections.</li>
+    <li>&nbsp; - File uploads</li>
+    <li>&nbsp; - Multi-page forms</li>
+    <li>&nbsp; - Multiple forms per website</li>
+    <li>&nbsp; - Supports tags for specific form fields into the email and email copy to the user</li>    
+    <li>&nbsp; - ...and more fields and validations</li>
+   </ul>
+   <p>Note: If you already acquired the PRO version you don't need to acquire it again, in that case just use your personal download link to get the latest update.</p>
+      
+   <p>There are also other plugins with similar features plus adding:<br />
+    &nbsp; - <strong>CP Contact Form with PayPal</strong>: Contact forms <a href="http://wordpress.dwbooster.com/forms/cp-contact-form-with-paypal">connected to PayPal</a> <br />
+    &nbsp; - <strong>Calculated Fields Form</strong>: Contact forms with <a href="http://wordpress.dwbooster.com/forms/calculated-fields-form">calculated fields</a> <br />
+    &nbsp; - <strong>Contact Form to Email</strong>: Contact forms with <a href="http://wordpress.dwbooster.com/forms/contact-form-to-email">reports of usage and export of data to Excel</a>.</p>
+
+   
+  </div>
+      
    
   </div>    
  </div> 
