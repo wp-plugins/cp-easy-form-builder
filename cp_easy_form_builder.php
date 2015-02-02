@@ -304,7 +304,7 @@ function cp_easyform_get_public_form($id = 1) {
     if (!CP_EASYFORM_DEFAULT_DEFER_SCRIPTS_LOADING)
     {              
             $prefix_ui = '';
-            if (file_exists(dirname( __FILE__ ).'/../../../wp-includes/js/jquery/ui/jquery.ui.core.min.js'))
+            if (@file_exists(dirname( __FILE__ ).'/../../../wp-includes/js/jquery/ui/jquery.ui.core.min.js'))
                 $prefix_ui = 'jquery.ui.';         
         // This code won't be used in most cases. This code is for preventing problems in wrong WP themes and conflicts with third party plugins.
 ?>
