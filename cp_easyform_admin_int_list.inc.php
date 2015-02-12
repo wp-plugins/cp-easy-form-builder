@@ -11,7 +11,7 @@ $message = "";
 
 if (isset($_GET['u']) && $_GET['u'] != '')
 {
-    $wpdb->query('UPDATE `'.$wpdb->prefix.CP_EASYFORM_FORMS_TABLE.'` SET form_name="'.esc_sql($_GET["name"]).'" WHERE id='.$_GET['u']);           
+    $wpdb->query('UPDATE `'.$wpdb->prefix.CP_EASYFORM_FORMS_TABLE.'` SET form_name="'.esc_sql($_GET["name"]).'" WHERE id='.intval($_GET['u']));           
     $message = "Item updated";        
 }
 else if (isset($_GET['ac']) && $_GET['ac'] == 'st')
