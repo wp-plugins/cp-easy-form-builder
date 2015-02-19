@@ -409,7 +409,7 @@ function set_cp_easyform_insert_adminScripts($hook) {
 function cp_easyform_get_site_url()
 {
     $url = parse_url(get_site_url());
-    $url = rtrim($url["path"],"/");
+    $url = rtrim(@$url["path"],"/");
     if ($url == '')
         $url = 'http://'.$_SERVER["HTTP_HOST"];
     return $url;
