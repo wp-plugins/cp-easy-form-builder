@@ -406,9 +406,15 @@ function set_cp_easyform_insert_adminScripts($hook) {
 
 
 
-function cp_easyform_get_site_url()
+function cp_easyform_get_site_url($admin = false)
 {
-    $url = parse_url(get_site_url());
+    $blog = get_current_blog_id();
+    if( $admin ) 
+        $url = get_admin_url( $blog );	
+    else 
+        $url = get_home_url( $blog );	
+
+    $url = parse_url($url);
     $url = rtrim(@$url["path"],"/");
     if ($url == '')
         $url = 'http://'.$_SERVER["HTTP_HOST"];
