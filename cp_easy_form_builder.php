@@ -102,7 +102,7 @@ function _cp_easyform_install() {
 
          form_name VARCHAR(250) DEFAULT '' NOT NULL,
 
-         form_structure text,
+         form_structure mediumtext,
 
          fp_from_email VARCHAR(250) DEFAULT '' NOT NULL,
          fp_destination_emails text,
