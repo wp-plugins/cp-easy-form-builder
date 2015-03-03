@@ -19,7 +19,7 @@ else if (isset($_GET['ac']) && $_GET['ac'] == 'st')
     update_option( 'CP_EFB_LOAD_SCRIPTS', ($_GET["scr"]=="1"?"0":"1") );   
     if ($_GET["chs"] != '')
     {
-        $target_charset = $_GET["chs"];
+        $target_charset = esc_sql($_GET["chs"]);
         $tables = array( $wpdb->prefix.CP_EASYFORM_FORMS_TABLE );                
         foreach ($tables as $tab)
         {  
