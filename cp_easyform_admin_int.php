@@ -378,7 +378,7 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
   <h3 class='hndle' style="padding:5px;"><span>Note</span></h3>
   <div class="inside">
    To insert this form in a post/page, use the dedicated icon 
-   <?php print '<a href="javascript:cp_easyform_insertForm();" title="'.__('Insert CP Easy Form').'"><img hspace="5" src="'.plugins_url('/images/cp_form.gif', __FILE__).'" alt="'.__('Insert CP Easy Form').'" /></a>';     ?>
+   <?php print '<a href="javascript:cp_easyform_insertForm();" title="'.__('Insert CP Easy Form Builder').'"><img hspace="5" src="'.plugins_url('/images/cp_form.gif', __FILE__).'" alt="'.__('Insert CP Easy Form Builder').'" /></a>';     ?>
    which has been added to your Upload/Insert Menu, just below the title of your Post/Page.
    <br /><br />
   </div>
