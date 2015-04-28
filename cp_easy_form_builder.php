@@ -3,7 +3,7 @@
 Plugin Name: CP Easy Form Builder
 Plugin URI: http://wordpress.dwbooster.com/forms/cp-easy-form-builder
 Description: This plugin allows you to easily insert forms into your website and get them via email.
-Version: 1.1.2
+Version: 1.1.3
 Author: CodePeople.net
 Author URI: http://codepeople.net
 License: GPL
@@ -566,7 +566,7 @@ function cp_easyform_save_options()
                   'cu_subject' => $_POST['cu_subject'],
                   'cu_message' => $_POST['cu_message'],
 
-                  'vs_use_validation' => $_POST['vs_use_validation'],
+                  //'vs_use_validation' => $_POST['vs_use_validation'],
                   'vs_text_is_required' => $_POST['vs_text_is_required'],
                   'vs_text_is_email' => $_POST['vs_text_is_email'],
                   'vs_text_datemmddyyyy' => $_POST['vs_text_datemmddyyyy'],
