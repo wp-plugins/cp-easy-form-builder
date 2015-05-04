@@ -169,6 +169,9 @@ You can read more details about that version at http://wordpress.dwbooster.com/f
 * Minor bug fixes
 * Fixed warning that appeared with PHP safe mode restrictions 
 
+= 1.1.3 =
+* Compatible with the WordPress 4.2.1 version
+
 Important note: If you are using the Professional version don't update via the WP dashboard but using your personal update link. Contact us if you need further information: http://wordpress.dwbooster.com/support
 
 
@@ -176,11 +179,7 @@ Important note: If you are using the Professional version don't update via the W
 
 Very Important note: If you are using the Professional version don't update via the WP dashboard but using your personal update link. Contact us if you need further information: http://wordpress.dwbooster.com/support
 
-= 1.1.2 =
-* Compatible with latest WP versions
-* Better interface and access to the plugin options
-* Captcha image works better in different server environments
-* Minor bug fixes
-* Fixed warning that appeared with PHP safe mode restrictions 
+= 1.1.3 =
+* Compatible with the WordPress 4.2.1 version
 
 Important note: If you are using the Professional version don't update via the WP dashboard but using your personal update link. Contact us if you need further information: http://wordpress.dwbooster.com/support
