@@ -514,10 +514,10 @@ function cp_easy_form_check_posted_data() {
     // 1- Send email
     //---------------------------
     $message = str_replace('<'.'%INFO%'.'>',$buffer,cp_easyform_get_option('fp_message', CP_EASYFORM_DEFAULT_fp_message));
-    $subject = cp_easyform_get_option('fp_subject', CP_EASYFORM_DEFAULT_fp_subject);
+    $subject = cp_easyform_get_option('fp_subject', @CP_EASYFORM_DEFAULT_fp_subject);
 
-    $from = cp_easyform_get_option('fp_from_email', CP_EASYFORM_DEFAULT_fp_from_email);
-    $to = explode(",",cp_easyform_get_option('fp_destination_emails', CP_EASYFORM_DEFAULT_fp_destination_emails));   
+    $from = cp_easyform_get_option('fp_from_email', @CP_EASYFORM_DEFAULT_fp_from_email);
+    $to = explode(",",cp_easyform_get_option('fp_destination_emails', @CP_EASYFORM_DEFAULT_fp_destination_emails));   
 
     foreach ($to as $item)
         if (trim($item) != '')
