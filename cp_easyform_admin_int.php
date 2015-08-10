@@ -18,7 +18,7 @@ if ( 'POST' == $_SERVER['REQUEST_METHOD'] && isset( $_POST['cp_easyform_post_opt
 
 ?>
 <div class="wrap">
-<h2>CP Easy Form Builder</h2>
+<h1>CP Easy Form Builder</h1>
 
 <input type="button" name="backbtn" value="Back to items list..." onclick="document.location='admin.php?page=cp_easy_form_builder';">
 <br /><br />

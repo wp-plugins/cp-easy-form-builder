@@ -43,7 +43,7 @@ if ($message) echo "<div id='setting-error-settings_updated' class='updated sett
 
 ?>
 <div class="wrap">
-<h2>CP Easy Form Builder</h2>
+<h1>CP Easy Form Builder</h1>
 
 <script type="text/javascript">
  
