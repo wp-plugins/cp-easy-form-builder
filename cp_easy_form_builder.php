@@ -638,10 +638,10 @@ function cp_easyform_get_option ($field, $default_value, $id = '1')
 
 class CP_EasyForm_Widget extends WP_Widget
 {
-  function CP_EasyForm_Widget()
+  function __construct()
   {
     $widget_ops = array('classname' => 'CP_EasyForm_Widget', 'description' => 'Displays a form' );
-    $this->WP_Widget('CP_EasyForm_Widget', 'CP Easy Form Builder', $widget_ops);
+    parent::__construct('CP_EasyForm_Widget', 'CP Easy Form Builder', $widget_ops);
   }
 
   function form($instance)
